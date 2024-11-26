@@ -48,7 +48,12 @@ def main(page: ft.Page):
                 ft.Text("Bienvenido a CotWare", size=30, weight=ft.FontWeight.BOLD),
                 ft.Text("Selecciona una opción desde la barra lateral.", size=18),
                 ft.ElevatedButton(
-                    "Cambiar Tema", on_click=toggle_theme, bgcolor=ft.colors.AMBER
+                    "Cambiar Tema", 
+                    on_click=toggle_theme,
+                    style=ft.ButtonStyle(
+                        color=ft.colors.WHITE,
+                        bgcolor=ft.colors.BLUE_GREY_500
+                    ),
                 ),
             ],
         )
