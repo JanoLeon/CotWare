@@ -1,7 +1,7 @@
 import flet as ft
 from screeninfo import get_monitors  # Instalar esta librería: pip install screeninfo
 from views.menu_principal_view import Menu_view
-from views.gestor_de_tareas_view import Organizar_view
+from views.gestor_de_tareas_view import Gestor_de_tareas_view
 
 # Configuración inicial
 def main(page: ft.Page):
@@ -39,8 +39,8 @@ def main(page: ft.Page):
         content_area.controls.clear()
         if view_name == "menu":
             content_area.controls.append(Menu_view(toggle_theme))
-        elif view_name == "Organizar":
-            content_area.controls.append(Organizar_view())
+        elif view_name == "Gestor de tareas":
+            content_area.controls.append(Gestor_de_tareas_view(page))
 
         page.update()
 
@@ -49,11 +49,11 @@ def main(page: ft.Page):
         selected_index=0,
         destinations=[
             ft.NavigationRailDestination(icon=ft.icons.HOME, label="Menú"),
-            ft.NavigationRailDestination(icon=ft.icons.ACCOUNT_TREE_SHARP, label="Organizar"),
+            ft.NavigationRailDestination(icon=ft.icons.ACCOUNT_TREE_SHARP, label="Gestor de tareas"),
             #ft.NavigationRailDestination(icon=ft.icons.SETTINGS, label="Pantalla 2"),
         ],
         on_change=lambda e: navegar_a(
-            ["menu", "Organizar", "pantalla_2"][e.control.selected_index]
+            ["menu", "Gestor de tareas", "pantalla_2"][e.control.selected_index]
         ),
     )
 
