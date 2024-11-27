@@ -1,10 +1,30 @@
 import flet as ft
+from screeninfo import get_monitors  # Instalar esta librería: pip install screeninfo
+from views.menu_principal_view import Menu_view
+from views.gestor_de_tareas_view import Organizar_view
 
 # Configuración inicial
 def main(page: ft.Page):
-    page.title = "CotWare"
-    page.window_width = 800
-    page.window_height = 600
+    page.title = "COTWARE"
+
+    # Obtener resolución de la pantalla principal
+    monitor = get_monitors()[0]  # Usamos el monitor principal
+    screen_width = monitor.width
+    screen_height = monitor.height
+
+    # Calcular tamaño de la ventana proporcionalmente
+    window_width = int(screen_width * 0.8)  # 80% del ancho de la pantalla
+    window_height = int(screen_height * 0.7)  # 70% de la altura de la pantalla
+
+    # Establecer el tamaño de la ventana
+    page.window_width = window_width
+    page.window_height = window_height
+
+    # Calcular posición para centrar la ventana
+    page.window_left = (screen_width - window_width) // 2
+    page.window_top = (screen_height - window_height) // 2
+
+    # Configurar tema inicial
     page.theme_mode = ft.ThemeMode.LIGHT
 
     # Función para alternar el tema
@@ -17,12 +37,11 @@ def main(page: ft.Page):
     # Función para cambiar la vista
     def navegar_a(view_name):
         content_area.controls.clear()
-        if view_name == "pantalla_1":
-            content_area.controls.append(pantalla_1_view())
-        elif view_name == "pantalla_2":
-            content_area.controls.append(pantalla_2_view())
-        else:
-            content_area.controls.append(menu_view())
+        if view_name == "menu":
+            content_area.controls.append(Menu_view(toggle_theme))
+        elif view_name == "Organizar":
+            content_area.controls.append(Organizar_view())
+
         page.update()
 
     # Barra lateral de navegación
@@ -30,51 +49,20 @@ def main(page: ft.Page):
         selected_index=0,
         destinations=[
             ft.NavigationRailDestination(icon=ft.icons.HOME, label="Menú"),
-            ft.NavigationRailDestination(icon=ft.icons.PAGEVIEW, label="Pantalla 1"),
-            ft.NavigationRailDestination(icon=ft.icons.SETTINGS, label="Pantalla 2"),
+            ft.NavigationRailDestination(icon=ft.icons.ACCOUNT_TREE_SHARP, label="Organizar"),
+            #ft.NavigationRailDestination(icon=ft.icons.SETTINGS, label="Pantalla 2"),
         ],
         on_change=lambda e: navegar_a(
-            ["menu", "pantalla_1", "pantalla_2"][e.control.selected_index]
+            ["menu", "Organizar", "pantalla_2"][e.control.selected_index]
         ),
     )
 
     # Área de contenido dinámico
     content_area = ft.Column(expand=True)
 
-    # Pantalla principal (Menú)
-    def menu_view():
-        return ft.Column(
-            controls=[
-                ft.Text("Bienvenido a CotWare", size=30, weight=ft.FontWeight.BOLD),
-                ft.Text("Selecciona una opción desde la barra lateral.", size=18),
-                ft.ElevatedButton(
-                    "Cambiar Tema", 
-                    on_click=toggle_theme,
-                    style=ft.ButtonStyle(
-                        color=ft.colors.WHITE,
-                        bgcolor=ft.colors.BLUE_GREY_500
-                    ),
-                ),
-            ],
-        )
-
-    # Pantalla 1
-    def pantalla_1_view():
-        return ft.Column(
-            controls=[
-                ft.Text("Pantalla 1: Aquí puedes agregar funcionalidad específica", size=20),
-            ],
-        )
-
-    # Pantalla 2
-    def pantalla_2_view():
-        return ft.Column(
-            controls=[
-                ft.Text("Pantalla 2: Configuración u otras herramientas", size=20),
-            ],
-        )
-
     # Configurar layout principal
+    content_area.controls.append(Menu_view(toggle_theme))
+
     page.add(
         ft.Row(
             controls=[
@@ -86,8 +74,6 @@ def main(page: ft.Page):
         )
     )
 
-    # Vista inicial
-    content_area.controls.append(menu_view())
     page.update()
 
 # Ejecutar la aplicación
