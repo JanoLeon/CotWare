@@ -2,6 +2,7 @@ import flet as ft
 from screeninfo import get_monitors  # Instalar esta librería: pip install screeninfo
 from views.menu_principal_view import Menu_view
 from views.gestor_de_tareas_view import Gestor_de_tareas_view
+from views.perfil_view import vista_perfil
 
 # Configuración inicial
 def main(page: ft.Page):
@@ -41,22 +42,25 @@ def main(page: ft.Page):
             content_area.controls.append(Menu_view(toggle_theme))
         elif view_name == "Gestor de tareas":
             content_area.controls.append(Gestor_de_tareas_view(page))
+        elif view_name == "Perfil":
+            content_area.controls.append(vista_perfil())
 
         page.update()
-
+    
     # Barra lateral de navegación
     nav_rail = ft.NavigationRail(
         selected_index=0,
         destinations=[
             ft.NavigationRailDestination(icon=ft.icons.HOME, label="Menú"),
             ft.NavigationRailDestination(icon=ft.icons.ACCOUNT_TREE_SHARP, label="Gestor de tareas"),
-            #ft.NavigationRailDestination(icon=ft.icons.SETTINGS, label="Pantalla 2"),
+            ft.NavigationRailDestination(icon=ft.icons.PERSON, label="Perfil"),
+            # ft.NavigationRailDestination(icon=ft.icons.PERSON, label="pantalla_2")
         ],
         on_change=lambda e: navegar_a(
-            ["menu", "Gestor de tareas", "pantalla_2"][e.control.selected_index]
+            ["menu", "Gestor de tareas", "Perfil"][e.control.selected_index]
         ),
     )
-
+    
     # Área de contenido dinámico
     content_area = ft.Column(expand=True)
 
