@@ -38,7 +38,7 @@ def vista_login(on_login_success, toggle_theme):
                                 ft.Column(
                                     [
                                         ft.Image(
-                                            src="logo_proyecto.jpeg",
+                                            src="icon.png",
                                             fit=ft.ImageFit.CONTAIN
                                         ),
                                         ft.Divider(),

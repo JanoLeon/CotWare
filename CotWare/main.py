@@ -1,13 +1,11 @@
 import flet as ft
+from screeninfo import get_monitors  # Instalar esta librería: pip install screeninfo
 from views.menu_principal_view import Menu_view
 from views.gestor_de_tareas_view import gestor_de_tareas_view
 from views.proyecto_detalle_view import proyecto_detalle_view
 from views.horario_trabajadores_view import HorarioTrabajadoresView
 from views.subir_documento_view import subir_documento_view
-<<<<<<< HEAD
 from views.login_view import vista_login
-=======
->>>>>>> 1cf88b35818492218fd7fa699581d04bf529f666
 
 def main(page: ft.Page):
     # Configuración inicial de la página
@@ -17,7 +15,6 @@ def main(page: ft.Page):
     page.vertical_alignment = ft.MainAxisAlignment.START
     page.bgcolor = ft.colors.PURPLE_50  # Fondo de color morado claro para toda la página
 
-<<<<<<< HEAD
     # Ajustar el tamaño de la página
     tamaño_monitor = get_monitors()[0]
     page.window_width = tamaño_monitor.width
@@ -31,16 +28,6 @@ def main(page: ft.Page):
         {"id": "004", "nombre": "Proyecto D", "estado": "Pendiente", "cliente": "Cliente D", "trabajadores": []},
     ]
 
-=======
-    # Lista simulada de proyectos - simulando datos de una base de datos
-    proyectos = [
-        {"id": "001", "nombre": "Proyecto A", "estado": "Pendiente", "cliente": "Cliente A", "trabajadores": []},
-        {"id": "002", "nombre": "Proyecto B", "estado": "Aprobado", "cliente": "Cliente B", "trabajadores": []},
-        {"id": "003", "nombre": "Proyecto C", "estado": "Rechazado", "cliente": "Cliente C", "trabajadores": []},
-        {"id": "004", "nombre": "Proyecto D", "estado": "Pendiente", "cliente": "Cliente D", "trabajadores": []},
-    ]
-
->>>>>>> 1cf88b35818492218fd7fa699581d04bf529f666
     # Función para cambiar el tema claro/oscuro
     def toggle_theme(_):
         page.theme_mode = (
@@ -88,15 +75,10 @@ def main(page: ft.Page):
     # Función para cambiar entre vistas (menú, gestión de tareas, detalles del proyecto, horario, subir documento)
     def navegar_a(view_name, proyecto=None):
         content_area.controls.clear()  # Limpiar el área de contenido antes de añadir la nueva vista
-<<<<<<< HEAD
         if view_name == "login":
             # Vista de login con botón para iniciar sesión
             content_area.controls.append(vista_login(lambda: navegar_a("menu"), toggle_theme))    
         elif view_name == "menu":
-=======
-
-        if view_name == "menu":
->>>>>>> 1cf88b35818492218fd7fa699581d04bf529f666
             # Vista del menú principal con opción para ver proyectos horizontalmente y crear un nuevo proyecto
             proyectos_carrusel = crear_carrusel_proyectos(proyectos)
 
@@ -266,11 +248,7 @@ def main(page: ft.Page):
         )
 
     # Configurar la vista inicial
-<<<<<<< HEAD
     navegar_a("login")  # Inicializar la vista de login
-=======
-    navegar_a("menu")
->>>>>>> 1cf88b35818492218fd7fa699581d04bf529f666
 
     # Barra lateral de navegación para cambiar entre vistas
     nav_rail = ft.NavigationRail(

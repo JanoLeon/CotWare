@@ -2,10 +2,6 @@ import flet as ft
 
 DIAS_SEMANA = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"]
 HORAS = ["09:00 - 10:00", "10:00 - 11:00", "11:00 - 12:00", "12:00 - 13:00", "14:00 - 15:00", "15:00 - 16:00", "16:00 - 17:00"]
-<<<<<<< HEAD
-=======
-
->>>>>>> 1cf88b35818492218fd7fa699581d04bf529f666
 trabajadores_disponibles = ["Juan", "María", "Carlos", "Ana", "Luis"]
 
 class HorarioTrabajadoresView:
@@ -19,24 +15,15 @@ class HorarioTrabajadoresView:
     def get_view(self):
         # Actualizar la vista de trabajadores al cargar la interfaz
         self.actualizar_trabajadores_column()
-<<<<<<< HEAD
-=======
-
->>>>>>> 1cf88b35818492218fd7fa699581d04bf529f666
         horario_table = ft.Column(
             controls=[
                 # Encabezado con días de la semana
                 ft.Row(
-<<<<<<< HEAD
                     controls=[
                         ft.Text("Hora", weight=ft.FontWeight.BOLD, size=20, color=ft.colors.PURPLE_700)
                     ] + [
                         ft.Text(dia, weight=ft.FontWeight.BOLD, size=20, color=ft.colors.PURPLE_700, width=150) for dia in DIAS_SEMANA
                     ],
-=======
-                    controls=[ft.Text("Hora", weight=ft.FontWeight.BOLD, size=20, color=ft.colors.PURPLE_700)] +
-                             [ft.Text(dia, weight=ft.FontWeight.BOLD, size=20, color=ft.colors.PURPLE_700, width=150) for dia in DIAS_SEMANA],
->>>>>>> 1cf88b35818492218fd7fa699581d04bf529f666
                     alignment=ft.MainAxisAlignment.START,
                     spacing=15,
                 ),
@@ -90,10 +77,6 @@ class HorarioTrabajadoresView:
             spacing=10,
             alignment=ft.MainAxisAlignment.START,
         )
-<<<<<<< HEAD
-=======
-
->>>>>>> 1cf88b35818492218fd7fa699581d04bf529f666
         # Botón para regresar a la vista principal de proyectos
         regresar_btn = ft.ElevatedButton(
             "Volver a Proyectos", 
@@ -103,27 +86,15 @@ class HorarioTrabajadoresView:
             width=200,
             height=40,
         )
-<<<<<<< HEAD
         # Botón para recargar la vista del horario
         recargar_btn = ft.ElevatedButton(
             "Refrescar Vista", 
             on_click=lambda _: self.refrescar_vista(),  # Asegúrate de llamar a refrescar_vista
-=======
-
-        # Botón para recargar la vista del horario
-        recargar_btn = ft.ElevatedButton(
-            "Refrescar Vista", 
-            on_click=lambda _: self.refrescar_vista(),
->>>>>>> 1cf88b35818492218fd7fa699581d04bf529f666
             bgcolor=ft.colors.BLUE_700,
             color=ft.colors.WHITE,
             width=200,
             height=40,
         )
-<<<<<<< HEAD
-=======
-
->>>>>>> 1cf88b35818492218fd7fa699581d04bf529f666
         # Encabezado y contenido principal de la vista del horario
         page = ft.Row(
             controls=[
@@ -143,21 +114,12 @@ class HorarioTrabajadoresView:
             alignment=ft.MainAxisAlignment.START,
             spacing=30,
         )
-<<<<<<< HEAD
         return page
 
     def refrescar_vista(self):
         # Vuelve a obtener la vista completa del horario
         self.trabajadores_column.controls.clear()  # Limpia la columna de trabajadores
         self.get_view()  # Llama a get_view para refrescar toda la vista
-=======
-
-        return page
-
-    def refrescar_vista(self):
-        # Refrescar la vista completa del horario
-        self.get_view()
->>>>>>> 1cf88b35818492218fd7fa699581d04bf529f666
 
     def actualizar_trabajadores_column(self):
         # Actualiza la lista de trabajadores disponibles
@@ -202,18 +164,12 @@ class HorarioTrabajadoresView:
         event.page.dialog.open = False
         event.page.update()
 
-<<<<<<< HEAD
-    # Versión corregida
-    # Versión corregida
-=======
->>>>>>> 1cf88b35818492218fd7fa699581d04bf529f666
     def actualizar_horario(self, page, dia, hora, trabajador):
         if trabajador:
             self.horarios[dia][hora] = trabajador
         else:
             self.horarios[dia][hora] = ""
         self.proyecto["horarios"] = self.horarios
-<<<<<<< HEAD
         self.refrescar_vista()
         page.update()
 
@@ -222,14 +178,6 @@ class HorarioTrabajadoresView:
         dialog = ft.AlertDialog(
             title=ft.Text("Añadir Nuevo Trabajador"),
             content=textfield,
-=======
-        page.update()
-
-    def abrir_dialogo_nuevo_trabajador(self, event):
-        dialog = ft.AlertDialog(
-            title=ft.Text("Añadir Nuevo Trabajador"),
-            content=ft.TextField(label="Nombre del Trabajador", on_submit=lambda e: self.guardar_nuevo_trabajador(e)),
->>>>>>> 1cf88b35818492218fd7fa699581d04bf529f666
             actions=[
                 ft.TextButton("Cancelar", on_click=lambda _: self.cerrar_dialogo(event)),
                 ft.TextButton("Añadir", on_click=lambda e: self.guardar_nuevo_trabajador(e)),
@@ -240,7 +188,6 @@ class HorarioTrabajadoresView:
         event.page.update()
 
     def guardar_nuevo_trabajador(self, event):
-<<<<<<< HEAD
         # Obtener el TextField del diálogo
         textfield = event.page.dialog.content
         trabajador = textfield.value
@@ -256,14 +203,6 @@ class HorarioTrabajadoresView:
             self.trabajadores_disponibles.remove(trabajador)
             self.actualizar_trabajadores_column()  # Actualiza la vista de trabajadores
             self.trabajadores_column.update()  # Asegúrate de que se actualice la columna de trabajadores
-=======
-        trabajador = event.control.value
-        if trabajador:
-            self.trabajadores_disponibles.append(trabajador)
-            self.actualizar_trabajadores_column()
-        self.cerrar_dialogo(event)
 
-    def eliminar_trabajador(self, trabajador):
-        self.trabajadores_disponibles.remove(trabajador)
-        self.actualizar_trabajadores_column()
->>>>>>> 1cf88b35818492218fd7fa699581d04bf529f666
+# En esta view falta que al asignar un trabajador esta se vea reflejado en el 
+# horario sin tener que moverse por las vistas
