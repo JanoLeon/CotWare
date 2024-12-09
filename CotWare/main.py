@@ -6,6 +6,7 @@ from views.proyecto_detalle_view import proyecto_detalle_view
 from views.horario_trabajadores_view import HorarioTrabajadoresView
 from views.subir_documento_view import subir_documento_view
 from views.login_view import vista_login
+from views.perfil_view import vista_perfil
 
 def main(page: ft.Page):
     # Configuración inicial de la página
@@ -13,7 +14,7 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT  # Establecer tema por defecto (claro)
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.vertical_alignment = ft.MainAxisAlignment.START
-    page.bgcolor = ft.colors.PURPLE_50  # Fondo de color morado claro para toda la página
+    # page.bgcolor = ft.colors.PURPLE_50  # Fondo de color morado claro para toda la página
 
     # Ajustar el tamaño de la página
     tamaño_monitor = get_monitors()[0]
@@ -48,7 +49,6 @@ def main(page: ft.Page):
         nuevo_nombre = nombre_field.value
         nuevo_estado = estado_dropdown.value
         nuevo_cliente = cliente_field.value
-
         if nuevo_nombre and nuevo_estado and nuevo_cliente:
             nuevo_proyecto = {
                 "id": nuevo_id,
@@ -58,7 +58,6 @@ def main(page: ft.Page):
                 "trabajadores": []
             }
             proyectos.append(nuevo_proyecto)
-
             # Limpiar campos y mostrar notificación de éxito
             nombre_field.value = ""
             estado_dropdown.value = None
@@ -81,7 +80,6 @@ def main(page: ft.Page):
         elif view_name == "menu":
             # Vista del menú principal con opción para ver proyectos horizontalmente y crear un nuevo proyecto
             proyectos_carrusel = crear_carrusel_proyectos(proyectos)
-
             # Campos de entrada para crear un nuevo proyecto
             global nombre_field, estado_dropdown, cliente_field
             nombre_field = ft.TextField(label="Nombre del Nuevo Proyecto", width=400)
@@ -95,28 +93,81 @@ def main(page: ft.Page):
                 width=400,
             )
             cliente_field = ft.TextField(label="Nombre del Cliente", width=400)
-
             # Agregar carrusel de proyectos y sección para crear un nuevo proyecto
             content_area.controls.append(
-                ft.Column(
-                    controls=[
-                        ft.Text("Bienvenido a COTWARE", size=24, weight=ft.FontWeight.BOLD, color=ft.colors.PURPLE_700),
-                        ft.Text("Proyectos Recientes", size=20, weight=ft.FontWeight.BOLD, color=ft.colors.GREY_800),
-                        proyectos_carrusel,
-                        ft.Divider(height=20),
-                        ft.Text("Crear un Nuevo Proyecto", size=20, weight=ft.FontWeight.BOLD, color=ft.colors.GREY_800),
-                        nombre_field,
-                        estado_dropdown,
-                        cliente_field,
-                        ft.ElevatedButton(
-                            "Crear Proyecto",
-                            on_click=crear_nuevo_proyecto,
-                            bgcolor=ft.colors.GREEN_600,
-                            color=ft.colors.WHITE,
-                            width=200,
-                        ),
-                    ],
-                    spacing=20,
+                ft.Container(
+                    ft.Row(
+                        controls=[
+                            ft.Column(
+                                controls=[
+                                    ft.Text("Bienvenido a COTWARE", size=24, weight=ft.FontWeight.BOLD, color=ft.colors.PURPLE_700),
+                                    ft.Text("Proyectos Recientes", size=20, weight=ft.FontWeight.BOLD, color=ft.colors.GREY_800),
+                                    proyectos_carrusel,
+                                    ft.Divider(height=20),
+                                    ft.Text("Crear un Nuevo Proyecto", size=20, weight=ft.FontWeight.BOLD, color=ft.colors.GREY_800),
+                                    nombre_field,
+                                    estado_dropdown,
+                                    cliente_field,
+                                    ft.ElevatedButton(
+                                        "Crear Proyecto",
+                                        on_click=crear_nuevo_proyecto,
+                                        bgcolor=ft.colors.GREEN_600,
+                                        color=ft.colors.WHITE,
+                                        width=200,
+                                    ),
+                                ],
+                                spacing=20,
+                            ),
+                            ft.Column(
+                                controls=[
+                                    ft.Card(
+                                        ft.Container(
+                                            ft.Column(
+                                                [
+                                                    ft.Image(src="icon.png"),
+                                                    ft.Divider(),
+                                                    ft.Row(
+                                                        [
+                                                            ft.TextField(
+                                                                icon=ft.Icons.LABEL_SHARP,
+                                                                label="Nombre",
+                                                                value="Juan Pérez",
+                                                                read_only=True,
+                                                                expand=True
+                                                            )
+                                                        ]
+                                                    ),
+                                                    ft.Row(
+                                                        [
+                                                            ft.TextField(
+                                                                icon=ft.Icons.LABEL,
+                                                                label="Cargo",
+                                                                value="Gerente",
+                                                                read_only=True,
+                                                                expand=True
+                                                            )
+                                                        ]
+                                                    ),
+                                                ],
+                                            ),
+                                            width=400,
+                                            padding=20
+                                        )
+                                    ),
+                                    ft.ElevatedButton(
+                                            "Ver Perfil",
+                                            bgcolor=ft.colors.BLUE_600,
+                                            color=ft.colors.WHITE,
+                                            width=400,
+                                            expand=True,
+                                            on_click=lambda _: navegar_a("perfil"),
+                                    ),
+                                ]
+                            )
+                        ],
+                        alignment=ft.MainAxisAlignment.SPACE_AROUND
+                    ), 
+                    padding=20
                 )
             )
         elif view_name == "gestor_de_tareas":
@@ -125,7 +176,7 @@ def main(page: ft.Page):
             search_field = ft.TextField(
                 label="Buscar Proyecto por ID o Nombre",
                 prefix_icon=ft.icons.SEARCH,
-                on_change=buscar_proyecto,
+                on_submit=buscar_proyecto,
                 width=400
             )
             content_area.controls.append(
@@ -143,9 +194,9 @@ def main(page: ft.Page):
             content_area.controls.append(
                 proyecto_detalle_view(
                     proyecto,
-                    lambda: navegar_a("menu"),
+                    lambda: navegar_a("menu"),  # Llamada para regresar a la vista anterior
                     lambda: navegar_a("horario", proyecto),
-                    actualizar_vista_principal  # Llamada para actualizar la vista al guardar cambios
+                    lambda: navegar_a("gestor_de_tareas")  # Llamada para actualizar la vista al guardar cambios
                 )
             )
         elif view_name == "horario":
@@ -172,7 +223,9 @@ def main(page: ft.Page):
         elif view_name == "subir_documento":
             # Vista para subir documentos para los proyectos
             content_area.controls.append(subir_documento_view(proyectos, lambda: navegar_a("menu")))
-
+        elif view_name == "perfil":
+            content_area.controls.clear()
+            content_area.controls.append(vista_perfil())
         page.update()
 
     # Función para buscar proyectos por ID o nombre
@@ -181,20 +234,19 @@ def main(page: ft.Page):
         resultados = [p for p in proyectos if query in p["id"].lower() or query in p["nombre"].lower()]
         content_area.controls.clear()
         proyectos_carrusel = crear_carrusel_proyectos(resultados)
-        search_field = ft.TextField(
-            label="Buscar Proyecto por ID o Nombre",
-            prefix_icon=ft.icons.SEARCH,
-            on_change=buscar_proyecto,
-            width=400
-        )
         content_area.controls.append(
             ft.Column(
                 controls=[
                     ft.Text("Gestión de Cotizaciones", size=24, weight=ft.FontWeight.BOLD, color=ft.colors.PURPLE_700),
-                    search_field,
                     proyectos_carrusel,
+                    ft.ElevatedButton(
+                        "Atrás",
+                        on_click=lambda _: navegar_a("gestor_de_tareas"),
+                        bgcolor=ft.colors.BLUE_600,
+                        color=ft.colors.WHITE,
+                        width=200,
+                    ),
                 ],
-                spacing=20,
             )
         )
         page.update()
@@ -244,7 +296,7 @@ def main(page: ft.Page):
             ],
             alignment=ft.MainAxisAlignment.START,
             spacing=10,
-            scroll="always"  # Scroll horizontal para simular un carrusel
+            scroll=ft.ScrollMode.ALWAYS  # Scroll horizontal para simular un carrusel
         )
 
     # Configurar la vista inicial
@@ -257,10 +309,11 @@ def main(page: ft.Page):
             ft.NavigationRailDestination(icon=ft.icons.HOME, label="Inicio"),
             ft.NavigationRailDestination(icon=ft.icons.ACCOUNT_TREE_SHARP, label="Gestión COT."),
             ft.NavigationRailDestination(icon=ft.icons.UPLOAD_FILE, label="Subir Documento"),
-            ft.NavigationRailDestination(icon=ft.icons.SCHEDULE, label="Horarios"),  # Añadido el botón de Horario
+            ft.NavigationRailDestination(icon=ft.icons.SCHEDULE, label="Horarios"), 
+            ft.NavigationRailDestination(icon=ft.icons.PERSON, label="Perfil"),
         ],
         on_change=lambda e: navegar_a(
-            ["menu", "gestor_de_tareas", "subir_documento", "horario"][e.control.selected_index]
+            ["menu", "gestor_de_tareas", "subir_documento", "horario", "perfil"][e.control.selected_index]
         ),
         bgcolor=ft.colors.PURPLE_300,  # Color morado para la barra lateral
     )
@@ -276,7 +329,6 @@ def main(page: ft.Page):
             expand=True,
         )
     )
-
     page.update()
 
 # Ejecutar la aplicación
