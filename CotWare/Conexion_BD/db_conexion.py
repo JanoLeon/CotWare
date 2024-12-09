@@ -13,7 +13,7 @@ class Conexion_BD:
                     host="localhost",
                     user="root",
                     password="",
-                    database="tu_base_de_datos"
+                    database="cotware"
                 )
                 cls._cursor = cls._connection.cursor(dictionary=True)  # Devuelve filas como diccionarios (opcional)
                 print("Conexión exitosa a la base de datos")

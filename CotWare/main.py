@@ -14,20 +14,14 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT  # Establecer tema por defecto (claro)
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.vertical_alignment = ft.MainAxisAlignment.START
-    # page.bgcolor = ft.colors.PURPLE_50  # Fondo de color morado claro para toda la página
 
     # Ajustar el tamaño de la página
     tamaño_monitor = get_monitors()[0]
     page.window_width = tamaño_monitor.width
     page.window_height = tamaño_monitor.height
 
-    # Lista simulada de proyectos - simulando datos de una base de datos
-    proyectos = [
-        {"id": "001", "nombre": "Proyecto A", "estado": "Pendiente", "cliente": "Cliente A", "trabajadores": []},
-        {"id": "002", "nombre": "Proyecto B", "estado": "Aprobado", "cliente": "Cliente B", "trabajadores": []},
-        {"id": "003", "nombre": "Proyecto C", "estado": "Rechazado", "cliente": "Cliente C", "trabajadores": []},
-        {"id": "004", "nombre": "Proyecto D", "estado": "Pendiente", "cliente": "Cliente D", "trabajadores": []},
-    ]
+    # Estado de autenticación
+    is_authenticated = False
 
     # Función para cambiar el tema claro/oscuro
     def toggle_theme(_):
@@ -41,263 +35,65 @@ def main(page: ft.Page):
 
     # Función para actualizar la vista principal
     def actualizar_vista_principal():
-        navegar_a("menu")
-
-    # Función para crear un nuevo proyecto
-    def crear_nuevo_proyecto(event):
-        nuevo_id = f"{len(proyectos) + 1:03}"
-        nuevo_nombre = nombre_field.value
-        nuevo_estado = estado_dropdown.value
-        nuevo_cliente = cliente_field.value
-        if nuevo_nombre and nuevo_estado and nuevo_cliente:
-            nuevo_proyecto = {
-                "id": nuevo_id,
-                "nombre": nuevo_nombre,
-                "estado": nuevo_estado,
-                "cliente": nuevo_cliente,
-                "trabajadores": []
-            }
-            proyectos.append(nuevo_proyecto)
-            # Limpiar campos y mostrar notificación de éxito
-            nombre_field.value = ""
-            estado_dropdown.value = None
-            cliente_field.value = ""
-            event.page.snack_bar = ft.SnackBar(ft.Text("Nuevo proyecto creado exitosamente!"))
-            event.page.snack_bar.open = True
-            actualizar_vista_principal()  # Actualizar vista automáticamente
+        if is_authenticated:
+            navegar_a("menu")
         else:
-            # Mostrar advertencia si faltan datos
-            event.page.snack_bar = ft.SnackBar(ft.Text("Por favor, completa todos los campos.", color=ft.colors.RED_700))
-            event.page.snack_bar.open = True
-            event.page.update()
+            navegar_a("login")
 
-    # Función para cambiar entre vistas (menú, gestión de tareas, detalles del proyecto, horario, subir documento)
-    def navegar_a(view_name, proyecto=None):
+    # Función para manejar el inicio de sesión
+    def login_success():
+        nonlocal is_authenticated
+        is_authenticated = True
+        actualizar_vista_principal()  # Cambiar a la vista principal después de iniciar sesión
+
+    # Función para cambiar entre vistas (menú, gestor de tareas, detalles del proyecto, horario, subir documento)
+    def navegar_a(view_name):
         content_area.controls.clear()  # Limpiar el área de contenido antes de añadir la nueva vista
+        
+        if not is_authenticated and view_name != "login":
+            # Si no está autenticado, forzar a mostrar la vista de login
+            view_name = "login"
+
         if view_name == "login":
             # Vista de login con botón para iniciar sesión
-            content_area.controls.append(vista_login(lambda: navegar_a("menu"), toggle_theme))    
+            content_area.controls.append(vista_login(lambda: login_success(), toggle_theme))    
         elif view_name == "menu":
-            # Vista del menú principal con opción para ver proyectos horizontalmente y crear un nuevo proyecto
-            proyectos_carrusel = crear_carrusel_proyectos(proyectos)
-            # Campos de entrada para crear un nuevo proyecto
-            global nombre_field, estado_dropdown, cliente_field
-            nombre_field = ft.TextField(label="Nombre del Nuevo Proyecto", width=400)
-            estado_dropdown = ft.Dropdown(
-                label="Estado del Nuevo Proyecto",
-                options=[
-                    ft.dropdown.Option("Pendiente"),
-                    ft.dropdown.Option("Aprobado"),
-                    ft.dropdown.Option("Rechazado"),
-                ],
-                width=400,
-            )
-            cliente_field = ft.TextField(label="Nombre del Cliente", width=400)
-            # Agregar carrusel de proyectos y sección para crear un nuevo proyecto
-            content_area.controls.append(
-                ft.Container(
-                    ft.Row(
-                        controls=[
-                            ft.Column(
-                                controls=[
-                                    ft.Text("Bienvenido a COTWARE", size=24, weight=ft.FontWeight.BOLD, color=ft.colors.PURPLE_700),
-                                    ft.Text("Proyectos Recientes", size=20, weight=ft.FontWeight.BOLD, color=ft.colors.GREY_800),
-                                    proyectos_carrusel,
-                                    ft.Divider(height=20),
-                                    ft.Text("Crear un Nuevo Proyecto", size=20, weight=ft.FontWeight.BOLD, color=ft.colors.GREY_800),
-                                    nombre_field,
-                                    estado_dropdown,
-                                    cliente_field,
-                                    ft.ElevatedButton(
-                                        "Crear Proyecto",
-                                        on_click=crear_nuevo_proyecto,
-                                        bgcolor=ft.colors.GREEN_600,
-                                        color=ft.colors.WHITE,
-                                        width=200,
-                                    ),
-                                ],
-                                spacing=20,
-                            ),
-                            ft.Column(
-                                controls=[
-                                    ft.Card(
-                                        ft.Container(
-                                            ft.Column(
-                                                [
-                                                    ft.Image(src="icon.png"),
-                                                    ft.Divider(),
-                                                    ft.Row(
-                                                        [
-                                                            ft.TextField(
-                                                                icon=ft.Icons.LABEL_SHARP,
-                                                                label="Nombre",
-                                                                value="Juan Pérez",
-                                                                read_only=True,
-                                                                expand=True
-                                                            )
-                                                        ]
-                                                    ),
-                                                    ft.Row(
-                                                        [
-                                                            ft.TextField(
-                                                                icon=ft.Icons.LABEL,
-                                                                label="Cargo",
-                                                                value="Gerente",
-                                                                read_only=True,
-                                                                expand=True
-                                                            )
-                                                        ]
-                                                    ),
-                                                ],
-                                            ),
-                                            width=400,
-                                            padding=20
-                                        )
-                                    ),
-                                    ft.ElevatedButton(
-                                            "Ver Perfil",
-                                            bgcolor=ft.colors.BLUE_600,
-                                            color=ft.colors.WHITE,
-                                            width=400,
-                                            expand=True,
-                                            on_click=lambda _: navegar_a("perfil"),
-                                    ),
-                                ]
-                            )
-                        ],
-                        alignment=ft.MainAxisAlignment.SPACE_AROUND
-                    ), 
-                    padding=20
-                )
-            )
-        elif view_name == "gestor_de_tareas":
-            # Vista del gestor de tareas que muestra también el carrusel de proyectos
-            proyectos_carrusel = crear_carrusel_proyectos(proyectos)
-            search_field = ft.TextField(
-                label="Buscar Proyecto por ID o Nombre",
-                prefix_icon=ft.icons.SEARCH,
-                on_submit=buscar_proyecto,
-                width=400
-            )
+            # Vista del menú principal
             content_area.controls.append(
                 ft.Column(
                     controls=[
-                        ft.Text("Gestión de Cotizaciones", size=24, weight=ft.FontWeight.BOLD, color=ft.colors.PURPLE_700),
-                        search_field,
-                        proyectos_carrusel,
+                        ft.Text("Bienvenido a COTWARE", size=24, weight=ft.FontWeight.BOLD, color=ft.colors.PURPLE_700),
                     ],
                     spacing=20,
                 )
             )
-        elif view_name == "proyecto_detalle" and proyecto is not None:
-            # Vista de detalles del proyecto con opciones para editar y ver el horario
+        elif view_name == "gestor_de_tareas":
+            # Vista del gestor de tareas
             content_area.controls.append(
-                proyecto_detalle_view(
-                    proyecto,
-                    lambda: navegar_a("menu"),  # Llamada para regresar a la vista anterior
-                    lambda: navegar_a("horario", proyecto),
-                    lambda: navegar_a("gestor_de_tareas")  # Llamada para actualizar la vista al guardar cambios
+                ft.Column(
+                    controls=[
+                        ft.Text("Gestión de Cotizaciones", size=24, weight=ft.FontWeight.BOLD, color=ft.colors.PURPLE_700),
+                    ],
+                    spacing=20,
                 )
             )
         elif view_name == "horario":
-            # Vista del horario del proyecto seleccionado
-            if proyecto:
-                horario_view = HorarioTrabajadoresView(proyecto, lambda: navegar_a("menu")).get_view()
-                content_area.controls.append(horario_view)
-            else:
-                proyecto_dropdown = ft.Dropdown(
-                    label="Seleccionar Proyecto para Ver Horario",
-                    options=[ft.dropdown.Option(proyecto["id"]) for proyecto in proyectos],
-                    on_change=lambda e: navegar_a("horario", next((p for p in proyectos if p["id"] == e.control.value), None)),
-                    width=400
+            # Vista del horario
+            content_area.controls.append(
+                ft.Column(
+                    controls=[
+                        ft.Text("Ver Horarios", size=24, weight=ft.FontWeight.BOLD, color=ft.colors.PURPLE_700),
+                    ],
+                    spacing=20,
                 )
-                content_area.controls.append(
-                    ft.Column(
-                        controls=[
-                            ft.Text("Ver Horario de los Trabajadores", size=24, weight=ft.FontWeight.BOLD, color=ft.colors.PURPLE_700),
-                            proyecto_dropdown,
-                        ],
-                        spacing=20,
-                    )
-                )
+            )
         elif view_name == "subir_documento":
-            # Vista para subir documentos para los proyectos
-            content_area.controls.append(subir_documento_view(proyectos, lambda: navegar_a("menu")))
+            # Vista para subir documentos
+            content_area.controls.append(subir_documento_view([], lambda: navegar_a("menu")))
         elif view_name == "perfil":
             content_area.controls.clear()
             content_area.controls.append(vista_perfil())
         page.update()
-
-    # Función para buscar proyectos por ID o nombre
-    def buscar_proyecto(event):
-        query = event.control.value.lower()
-        resultados = [p for p in proyectos if query in p["id"].lower() or query in p["nombre"].lower()]
-        content_area.controls.clear()
-        proyectos_carrusel = crear_carrusel_proyectos(resultados)
-        content_area.controls.append(
-            ft.Column(
-                controls=[
-                    ft.Text("Gestión de Cotizaciones", size=24, weight=ft.FontWeight.BOLD, color=ft.colors.PURPLE_700),
-                    proyectos_carrusel,
-                    ft.ElevatedButton(
-                        "Atrás",
-                        on_click=lambda _: navegar_a("gestor_de_tareas"),
-                        bgcolor=ft.colors.BLUE_600,
-                        color=ft.colors.WHITE,
-                        width=200,
-                    ),
-                ],
-            )
-        )
-        page.update()
-
-    # Función auxiliar para crear el carrusel de proyectos
-    def crear_carrusel_proyectos(proyectos):
-        return ft.Row(
-            controls=[
-                ft.Container(
-                    content=ft.Column(
-                        controls=[
-                            ft.Text(f"ID: {proyecto['id']}", weight=ft.FontWeight.BOLD),
-                            ft.Text(f"Nombre: {proyecto['nombre']}"),
-                            ft.Text(f"Cliente: {proyecto['cliente']}"),
-                            ft.Text(
-                                f"Estado: {proyecto['estado']}",
-                                weight=ft.FontWeight.BOLD,
-                                color=(
-                                    ft.colors.YELLOW_900 if proyecto['estado'] == "Pendiente"
-                                    else ft.colors.GREEN_600 if proyecto['estado'] == "Aprobado"
-                                    else ft.colors.RED_600
-                                )
-                            ),
-                            ft.ElevatedButton(
-                                "Ver / Editar",
-                                on_click=lambda e, p=proyecto: navegar_a("proyecto_detalle", p),
-                                bgcolor=ft.colors.BLUE_600,
-                                color=ft.colors.WHITE,
-                                width=150,
-                            ),
-                            ft.ElevatedButton(
-                                "Ver Horario",
-                                on_click=lambda e, p=proyecto: navegar_a("horario", p),
-                                bgcolor=ft.colors.GREEN_600,
-                                color=ft.colors.WHITE,
-                                width=150,
-                            ),
-                        ],
-                        spacing=5,
-                    ),
-                    padding=10,
-                    border_radius=8,
-                    bgcolor=ft.colors.GREY_200,
-                    width=250,
-                    height=220,
-                ) for proyecto in proyectos
-            ],
-            alignment=ft.MainAxisAlignment.START,
-            spacing=10,
-            scroll=ft.ScrollMode.ALWAYS  # Scroll horizontal para simular un carrusel
-        )
 
     # Configurar la vista inicial
     navegar_a("login")  # Inicializar la vista de login
