@@ -164,8 +164,6 @@ class HorarioTrabajadoresView:
         event.page.dialog.open = False
         event.page.update()
 
-    # Versión corregida
-    # Versión corregida
     def actualizar_horario(self, page, dia, hora, trabajador):
         if trabajador:
             self.horarios[dia][hora] = trabajador
@@ -205,3 +203,6 @@ class HorarioTrabajadoresView:
             self.trabajadores_disponibles.remove(trabajador)
             self.actualizar_trabajadores_column()  # Actualiza la vista de trabajadores
             self.trabajadores_column.update()  # Asegúrate de que se actualice la columna de trabajadores
+
+# En esta view falta que al asignar un trabajador esta se vea reflejado en el 
+# horario sin tener que moverse por las vistas
