@@ -1,4 +1,5 @@
 import flet as ft
+from Conexion_BD.db_conexion import Conexion_BD
 
 def vista_perfil():
     return ft.Container(
@@ -17,7 +18,7 @@ def vista_perfil():
                                                 ft.TextField(
                                                     icon=ft.Icons.LABEL_SHARP,
                                                     label="Nombre",
-                                                    value="Juan Pérez",
+                                                    value="nombre",
                                                     read_only=True,
                                                     expand=True
                                                 )
@@ -28,7 +29,7 @@ def vista_perfil():
                                                 ft.TextField(
                                                     icon=ft.Icons.LABEL,
                                                     label="Cargo",
-                                                    value="Gerente",
+                                                    value="cargo",
                                                     read_only=True,
                                                     expand=True
                                                 )

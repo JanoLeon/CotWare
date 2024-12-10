@@ -2,7 +2,7 @@ import flet as ft
 import bcrypt
 from Conexion_BD.db_conexion import Conexion_BD  # Asegúrate de importar tu clase de conexión
 
-def vista_login(on_login_success, toggle_theme):
+def vista_login(on_login_success):
     def iniciar_sesion(event):
         # Obtener valores de los campos
         email = email_field.value
@@ -27,6 +27,7 @@ def vista_login(on_login_success, toggle_theme):
                     on_login_success()
                 else:
                     # Si las credenciales no coinciden
+                    print(hashed_password)
                     event.page.snack_bar = ft.SnackBar(ft.Text("Credenciales incorrectas.", color=ft.colors.RED_700))
                     event.page.snack_bar.open = True
                     event.page.update()
@@ -54,7 +55,7 @@ def vista_login(on_login_success, toggle_theme):
         icon=ft.icons.LABEL,
         label="Contraseña",
         value="",
-        password=True,  # Esto oculta el texto de la contraseña
+        # password=True,  # Esto oculta el texto de la contraseña
         expand=True
     )
     

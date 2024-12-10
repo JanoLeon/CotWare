@@ -50,6 +50,7 @@ def agregar_empleado(nombre, rut, telefono, cargo, departamento):
 empleados = [
     ("Manuel Calderon", "21605737-6", "997942666", "Programador", "Desarrollo"),
     ("Monserrat Kerber", "21512194-1", "928409914", "Marketing", "Comunicaciones"),
+    ("Benjamin Hermosilla", "21305714-6", "938933272", "Programador", "Desarrollo")
 ]
 
 # Paso 1: Conectar a la base de datos cotware

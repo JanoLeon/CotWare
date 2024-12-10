@@ -1,9 +1,9 @@
 import flet as ft
 from screeninfo import get_monitors  # Instalar esta librería: pip install screeninfo
-from views.menu_principal_view import Menu_view
+from views.menu_principal_view import menu_principal_view
 from views.gestor_de_tareas_view import gestor_de_tareas_view
 from views.proyecto_detalle_view import proyecto_detalle_view
-from views.horario_trabajadores_view import HorarioTrabajadoresView
+from views.horario_trabajadores_view import mostrar_horario, seleccionar_proyecto_para_horario
 from views.subir_documento_view import subir_documento_view
 from views.login_view import vista_login
 from views.perfil_view import vista_perfil
@@ -15,10 +15,10 @@ def main(page: ft.Page):
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.vertical_alignment = ft.MainAxisAlignment.START
 
-    # Ajustar el tamaño de la página
+    # Ajustar el tamaño de la página al tamaño del monitor
     tamaño_monitor = get_monitors()[0]
-    page.window_width = tamaño_monitor.width
-    page.window_height = tamaño_monitor.height
+    page.window.width = tamaño_monitor.width
+    page.window.height = tamaño_monitor.height
 
     # Estado de autenticación
     is_authenticated = False
@@ -47,7 +47,7 @@ def main(page: ft.Page):
         actualizar_vista_principal()  # Cambiar a la vista principal después de iniciar sesión
 
     # Función para cambiar entre vistas (menú, gestor de tareas, detalles del proyecto, horario, subir documento)
-    def navegar_a(view_name):
+    def navegar_a(view_name, proyecto=None):
         content_area.controls.clear()  # Limpiar el área de contenido antes de añadir la nueva vista
         
         if not is_authenticated and view_name != "login":
@@ -56,42 +56,26 @@ def main(page: ft.Page):
 
         if view_name == "login":
             # Vista de login con botón para iniciar sesión
-            content_area.controls.append(vista_login(lambda: login_success(), toggle_theme))    
+            content_area.controls.append(vista_login(lambda: login_success()))    
         elif view_name == "menu":
             # Vista del menú principal
-            content_area.controls.append(
-                ft.Column(
-                    controls=[
-                        ft.Text("Bienvenido a COTWARE", size=24, weight=ft.FontWeight.BOLD, color=ft.colors.PURPLE_700),
-                    ],
-                    spacing=20,
-                )
-            )
+            content_area.controls.append(menu_principal_view(page, navegar_a))
         elif view_name == "gestor_de_tareas":
             # Vista del gestor de tareas
-            content_area.controls.append(
-                ft.Column(
-                    controls=[
-                        ft.Text("Gestión de Cotizaciones", size=24, weight=ft.FontWeight.BOLD, color=ft.colors.PURPLE_700),
-                    ],
-                    spacing=20,
-                )
-            )
+            content_area.controls.append(gestor_de_tareas_view(navegar_a))
         elif view_name == "horario":
-            # Vista del horario
-            content_area.controls.append(
-                ft.Column(
-                    controls=[
-                        ft.Text("Ver Horarios", size=24, weight=ft.FontWeight.BOLD, color=ft.colors.PURPLE_700),
-                    ],
-                    spacing=20,
-                )
-            )
+            # Vista del horario del proyecto seleccionado
+            if proyecto:
+                horario_view = mostrar_horario(proyecto, lambda: navegar_a("menu"))
+                content_area.controls.append(horario_view)
+            else:
+                content_area.controls.append(seleccionar_proyecto_para_horario(content_area, lambda: navegar_a("menu")))
+
         elif view_name == "subir_documento":
             # Vista para subir documentos
             content_area.controls.append(subir_documento_view([], lambda: navegar_a("menu")))
         elif view_name == "perfil":
-            content_area.controls.clear()
+            # Vista del perfil del usuario
             content_area.controls.append(vista_perfil())
         page.update()
 
@@ -102,16 +86,16 @@ def main(page: ft.Page):
     nav_rail = ft.NavigationRail(
         selected_index=0,
         destinations=[
-            ft.NavigationRailDestination(icon=ft.icons.HOME, label="Inicio"),
-            ft.NavigationRailDestination(icon=ft.icons.ACCOUNT_TREE_SHARP, label="Gestión COT."),
-            ft.NavigationRailDestination(icon=ft.icons.UPLOAD_FILE, label="Subir Documento"),
-            ft.NavigationRailDestination(icon=ft.icons.SCHEDULE, label="Horarios"), 
-            ft.NavigationRailDestination(icon=ft.icons.PERSON, label="Perfil"),
+            ft.NavigationRailDestination(icon=ft.Icons.HOME, label="Inicio"),
+            ft.NavigationRailDestination(icon=ft.Icons.ACCOUNT_TREE_SHARP, label="Gestión COT."),
+            ft.NavigationRailDestination(icon=ft.Icons.UPLOAD_FILE, label="Subir Documento"),
+            ft.NavigationRailDestination(icon=ft.Icons.SCHEDULE, label="Horarios"), 
+            ft.NavigationRailDestination(icon=ft.Icons.PERSON, label="Perfil"),
         ],
         on_change=lambda e: navegar_a(
             ["menu", "gestor_de_tareas", "subir_documento", "horario", "perfil"][e.control.selected_index]
         ),
-        bgcolor=ft.colors.PURPLE_300,  # Color morado para la barra lateral
+        bgcolor=ft.Colors.PURPLE_300,  # Color morado para la barra lateral
     )
 
     # Agregar el contenido a la página principal
