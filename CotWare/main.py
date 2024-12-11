@@ -2,8 +2,7 @@ import flet as ft
 from screeninfo import get_monitors  # Instalar esta librería: pip install screeninfo
 from views.menu_principal_view import menu_principal_view
 from views.gestor_de_tareas_view import gestor_de_tareas_view
-from views.proyecto_detalle_view import proyecto_detalle_view
-from views.horario_trabajadores_view import mostrar_horario, seleccionar_proyecto_para_horario
+from views.horario_trabajadores_view import vista_horario
 from views.subir_documento_view import subir_documento_view
 from views.login_view import vista_login
 from views.perfil_view import vista_perfil
@@ -14,6 +13,7 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT  # Establecer tema por defecto (claro)
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.vertical_alignment = ft.MainAxisAlignment.START
+
 
     # Ajustar el tamaño de la página al tamaño del monitor
     tamaño_monitor = get_monitors()[0]
@@ -47,7 +47,7 @@ def main(page: ft.Page):
         actualizar_vista_principal()  # Cambiar a la vista principal después de iniciar sesión
 
     # Función para cambiar entre vistas (menú, gestor de tareas, detalles del proyecto, horario, subir documento)
-    def navegar_a(view_name, proyecto=None):
+    def navegar_a(view_name):
         content_area.controls.clear()  # Limpiar el área de contenido antes de añadir la nueva vista
         
         if not is_authenticated and view_name != "login":
@@ -65,12 +65,7 @@ def main(page: ft.Page):
             content_area.controls.append(gestor_de_tareas_view(navegar_a))
         elif view_name == "horario":
             # Vista del horario del proyecto seleccionado
-            if proyecto:
-                horario_view = mostrar_horario(proyecto, lambda: navegar_a("menu"))
-                content_area.controls.append(horario_view)
-            else:
-                content_area.controls.append(seleccionar_proyecto_para_horario(content_area, lambda: navegar_a("menu")))
-
+            content_area.controls.append(vista_horario())
         elif view_name == "subir_documento":
             # Vista para subir documentos
             content_area.controls.append(subir_documento_view([], lambda: navegar_a("menu")))

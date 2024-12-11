@@ -27,14 +27,14 @@ def crear_carrusel_proyectos(proyectos, navegar_a_callback):
                     ),
                     ft.ElevatedButton(
                         "Ver / Editar",
-                        on_click=lambda e, p=proyecto: navegar_a_callback("gestor_de_tareas_view", p),
+                        on_click=lambda e, p=proyecto: navegar_a_callback("gestor_de_tareas"),
                         bgcolor=ft.Colors.BLUE_600,
                         color=ft.Colors.WHITE,
                         width=150,
                     ),
                     ft.ElevatedButton(
                         "Ver Horario",
-                        on_click=lambda e, p=proyecto: navegar_a_callback("horario", p),
+                        on_click=lambda e, p=proyecto: navegar_a_callback("horario"),
                         bgcolor=ft.Colors.GREEN_600,
                         color=ft.Colors.WHITE,
                         width=150,

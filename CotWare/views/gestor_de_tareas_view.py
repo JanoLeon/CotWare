@@ -72,18 +72,127 @@ def gestor_de_tareas_view(navegar_a_callback):
         proyectos_carrusel = crear_carrusel_proyectos(resultados, navegar_a_callback)
         content_area.controls.clear()
         content_area.controls.append(
-            ft.Column(
+            ft.Row(
                 controls=[
-                    ft.Text("Gestión de Cotizaciones", size=24, weight=ft.FontWeight.BOLD, color=ft.Colors.PURPLE_700),
-                    ft.ElevatedButton(
-                        "Atrás",
-                        on_click=mostrar_todos_los_proyectos,
-                        bgcolor=ft.Colors.BLUE_600,
-                        color=ft.Colors.WHITE,
-                        width=200,
+                    ft.Column(
+                        controls=[
+                            ft.Text("Gestión de Cotizaciones", size=24, weight=ft.FontWeight.BOLD, color=ft.Colors.PURPLE_700),
+                            proyectos_carrusel,
+                            ft.ElevatedButton(
+                                "Atrás",
+                                on_click=mostrar_todos_los_proyectos,
+                                bgcolor=ft.Colors.BLUE_600,
+                                color=ft.Colors.WHITE,
+                                width=200,
+                            ),
+                        ],
+                        spacing=20,
                     ),
-                    proyectos_carrusel,
+                    ft.VerticalDivider(width=1),
+                    ft.Column(
+                        controls=[
+                            ft.Text(
+                                "COTWARE", 
+                                size=24, 
+                                weight=ft.FontWeight.BOLD, 
+                                color=ft.Colors.PURPLE_700
+                            ),
+                            ft.Row(
+                                controls=[
+                                    ft.Text("ID Cotizacion: 1", weight=ft.FontWeight.BOLD),
+                                ],
+                            ),
+                            ft.Row(
+                                controls=[
+                                    ft.Text("Nombre Proyecto: Proyecto 1", weight=ft.FontWeight.BOLD),
+                                    ft.Container(width=20),  # Añade un espacio entre los textos
+                                    ft.Text("Cliente: Cliente 1", weight=ft.FontWeight.BOLD),
+                                ],
+                            ),
+                            ft.Divider(
+                                height=2,
+                                thickness=2,
+                                color=ft.Colors.GREY_300
+                            ),
+                            ft.Row(
+                                controls=[
+                                    ft.Text("Producto/s", weight=ft.FontWeight.BOLD, color=ft.Colors.YELLOW_900, width=120, text_align=ft.TextAlign.START),
+                                    ft.Text("Item/s", weight=ft.FontWeight.BOLD, color=ft.Colors.YELLOW_900, width=120, text_align=ft.TextAlign.START),
+                                    ft.Text("Precio Unitario", weight=ft.FontWeight.BOLD, color=ft.Colors.YELLOW_900, width=120, text_align=ft.TextAlign.START),
+                                    ft.Text("Precio Total", weight=ft.FontWeight.BOLD, color=ft.Colors.YELLOW_900, width=120, text_align=ft.TextAlign.START),
+                                ],
+                            ),
+                            ft.Divider(
+                                height=2,
+                                thickness=2,
+                                color=ft.Colors.GREY_300
+                            ),
+                            ft.Row(
+                                controls=[
+                                    ft.Text("Producto 1", width=125),
+                                    ft.Text("1 Item", width=153),
+                                    ft.Text("$1.000", width=110),
+                                    ft.Text("$1.000", width=120),
+                                ],
+                            ),
+                            ft.Row(
+                                controls=[
+                                    ft.Text("Producto 2", width=125),
+                                    ft.Text("2 Items", width=153),
+                                    ft.Text("$2.000", width=110),
+                                    ft.Text("$4.000", width=120),
+                                ],
+                            ),
+                            ft.Row(
+                                controls=[
+                                    ft.Text("Producto 3", width=125),
+                                    ft.Text("3 Items", width=153),
+                                    ft.Text("$3.000", width=110),
+                                    ft.Text("$9.000", width=120),
+                                ],
+                            ),
+                            ft.Row(
+                                controls=[
+                                    ft.Text("Producto 4", width=125),
+                                    ft.Text("4 Items", width=153),
+                                    ft.Text("$4.000", width=110),
+                                    ft.Text("$16.000", width=120),
+                                ],
+                            ),
+                            ft.Divider(
+                                height=2,
+                                thickness=2,
+                                color=ft.Colors.GREY_300
+                            ),
+                            ft.Row(
+                                controls=[
+                                    ft.Text("", width=125),
+                                    ft.Text("", width=153),
+                                    ft.Text("Subtotal", width=110),
+                                    ft.Text("$30.000", width=120)
+                                ],
+                            ),
+                            ft.Row(
+                                controls=[
+                                    ft.Text("", width=125),
+                                    ft.Text("", width=153),
+                                    ft.Text("IVA 19%", width=110),
+                                    ft.Text("$5.700", width=120)
+                                ],
+                            ),
+                            ft.Row(
+                                controls=[
+                                    ft.Text("", width=125),
+                                    ft.Text("", width=153),
+                                    ft.Text("Total", width=110),
+                                    ft.Text("$35.700", width=120)
+                                ],
+                            ),
+                        ],
+                        spacing=20,
+                    ),
                 ],
+                alignment=ft.MainAxisAlignment.START,
                 spacing=20,
             )
         )
@@ -138,31 +247,53 @@ def gestor_de_tareas_view(navegar_a_callback):
 
         content_area.controls.clear()
         content_area.controls.append(
-            ft.Column(
+            ft.Row(
                 controls=[
-                    ft.Text(f"Editar Proyecto {proyecto['ID_Proyecto']}", size=24, weight=ft.FontWeight.BOLD, color=ft.Colors.PURPLE_700),
-                    nombre_field,
-                    cliente_field,
-                    estado_dropdown,
-                    ft.ElevatedButton(
-                        "Guardar Cambios",
-                        on_click=guardar_cambios,
-                        bgcolor=ft.Colors.GREEN_600,
-                        color=ft.Colors.WHITE,
-                        width=200,
-                    ),
-                    ft.ElevatedButton(
-                        "Cancelar",
-                        on_click=mostrar_todos_los_proyectos,
-                        bgcolor=ft.Colors.RED_600,
-                        color=ft.Colors.WHITE,
-                        width=200,
+                    ft.Column(
+                        controls=[
+                        ft.Column(
+                            controls=[
+                                ft.Text(f"Editar Proyecto {proyecto['ID_Proyecto']}", size=24, weight=ft.FontWeight.BOLD, color=ft.Colors.PURPLE_700),
+                                nombre_field,
+                                cliente_field,
+                                estado_dropdown,
+                            ],
+                        ),
+                        ft.Column(
+                            controls=[
+                                ft.TextField(
+                                    label="Archivo asociado",
+                                    value=proyecto["Cotizacion_Proyecto"],
+                                    read_only=True,
+                                    width=400
+                                ),
+                            ],
+                        ),
+                        ft.Row(
+                            controls=[
+                            ft.ElevatedButton(
+                                "Guardar Cambios",
+                                on_click=guardar_cambios,
+                                bgcolor=ft.Colors.GREEN_600,
+                                color=ft.Colors.WHITE,
+                                width=200,
+                            ),
+                            ft.ElevatedButton(
+                                "Volver atras",
+                                on_click=mostrar_todos_los_proyectos,
+                                bgcolor=ft.Colors.RED_600,
+                                color=ft.Colors.WHITE,
+                                width=200,
+                            ),
+                            ],
+                        ),
+                        ],
                     ),
                 ],
                 spacing=20,
             )
         )
-        event.page.update()
+        event.page.update() 
 
     # Obtener los proyectos desde la base de datos
     proyectos = obtener_proyectos()
