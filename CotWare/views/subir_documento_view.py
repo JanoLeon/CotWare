@@ -1,7 +1,7 @@
 import flet as ft
 from Conexion_BD.db_conexion import Conexion_BD
 
-def subir_documento_view(proyectos, regresar_callback):
+def subir_documento_view(proyectos):
     def obtener_proyectos():
         query = "SELECT ID_Proyecto, Nombre_Proyecto FROM proyectos"
         cursor = Conexion_BD.get_cursor()
@@ -78,6 +78,5 @@ def subir_documento_view(proyectos, regresar_callback):
         file_picker, 
         ft.Button("Seleccionar archivo", on_click=lambda _: file_picker.pick_files()),
         ft.Button("Subir archivo", on_click=subir_archivo),
-        ft.Button("Descargar archivo", on_click=descargar_archivo),
-        ft.Button("Regresar", on_click=regresar_callback)
+        ft.Button("Descargar archivo", on_click=descargar_archivo)
     ])

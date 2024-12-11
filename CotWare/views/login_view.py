@@ -55,7 +55,7 @@ def vista_login(on_login_success):
         icon=ft.icons.LABEL,
         label="Contraseña",
         value="",
-        # password=True,  # Esto oculta el texto de la contraseña
+        password=True,  # Esto oculta el texto de la contraseña
         expand=True
     )
     

@@ -17,8 +17,8 @@ def main(page: ft.Page):
 
     # Ajustar el tamaño de la página al tamaño del monitor
     tamaño_monitor = get_monitors()[0]
-    page.window.width = tamaño_monitor.width
-    page.window.height = tamaño_monitor.height
+    page.window.width = (tamaño_monitor.width * 0.8)
+    page.window.height = (tamaño_monitor.height * 0.8)
 
     # Estado de autenticación
     is_authenticated = False
@@ -68,7 +68,7 @@ def main(page: ft.Page):
             content_area.controls.append(vista_horario())
         elif view_name == "subir_documento":
             # Vista para subir documentos
-            content_area.controls.append(subir_documento_view([], lambda: navegar_a("menu")))
+            content_area.controls.append(subir_documento_view([]))
         elif view_name == "perfil":
             # Vista del perfil del usuario
             content_area.controls.append(vista_perfil())

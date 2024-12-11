@@ -82,8 +82,17 @@ def formulario_crear_proyecto(page, navegar_a_callback):
         # Actualizar el carrusel de proyectos
         proyectos = obtener_proyectos()
         proyectos_carrusel = crear_carrusel_proyectos(proyectos, navegar_a_callback)
-        page.controls[1].controls[0] = proyectos_carrusel  # Actualizar el carrusel en la vista
+        
+        # Encuentra el índice del carrusel de proyectos en la página
+        for i, control in enumerate(page.controls):
+            if isinstance(control, ft.Row) and len(control.controls) > 0 and isinstance(control.controls[0], ft.Column):
+                control.controls[0].controls[1].controls[0] = proyectos_carrusel  # Actualizar el carrusel en la vista
+                break
+        
         page.update()
+
+        # Redireccionar al menú principal
+        navegar_a_callback("menu")
 
     return ft.Column(
         controls=[
